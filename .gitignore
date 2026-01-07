@@ -6,7 +6,7 @@ __pycache__/
 .env
 .venv/
 
-# Data / outputs
+# Local data / state
 data/
 outputs/
 

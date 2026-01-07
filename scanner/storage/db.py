@@ -75,3 +75,33 @@ def connect(db_path: Path) -> sqlite3.Connection:
 def init_db(con: sqlite3.Connection) -> None:
     con.executescript(SCHEMA_SQL)
     con.commit()
+
+def sqlite_upsert_daily_bars(table, conn, keys, data_iter):
+    """
+    Pandas to_sql UPSERT helper for SQLite.
+
+    Assumes UNIQUE(symbol, date) constraint exists.
+    """
+    data = list(data_iter)
+    if not data:
+        return 0
+
+    columns = ",".join([f'"{k}"' for k in keys])
+    placeholders = ",".join(["?"] * len(keys))
+
+    conflict_keys = {"symbol", "date"}
+    update_cols = [k for k in keys if k not in conflict_keys]
+
+    set_clause = ", ".join(
+        [f'"{c}"=excluded."{c}"' for c in update_cols]
+    )
+
+    sql = f"""
+    INSERT INTO {table.name} ({columns})
+    VALUES ({placeholders})
+    ON CONFLICT(symbol, date) DO UPDATE SET
+        {set_clause}
+    """
+
+    conn.executemany(sql, data)
+    return len(data)

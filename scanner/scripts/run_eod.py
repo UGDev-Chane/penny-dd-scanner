@@ -3,6 +3,8 @@ import argparse
 import json
 from datetime import datetime, date, timedelta
 from pathlib import Path
+from scanner.storage.db import sqlite_upsert_daily_bars
+
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -49,7 +51,14 @@ def main():
         return
 
     # Store bars
-    bars.to_sql("daily_bars", con, if_exists="append", index=False)
+    bars.to_sql(
+    "daily_bars",
+    con,
+    if_exists="append",
+    index=False,
+    method=sqlite_upsert_daily_bars,
+)
+
 
     # EDGAR client
     edgar = EdgarClient(user_agent=os.getenv("SEC_USER_AGENT", "penny-dd-scanner/0.1 (contact: you@example.com)"), max_rps=5.0)
