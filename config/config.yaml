@@ -1,0 +1,25 @@
+universe:
+  exchanges: ["NASDAQ", "NYSE", "NYSEAMERICAN"]
+  min_price: 0.50
+  max_price: 5.00
+  min_avg_dollar_volume_20d: 5000000
+
+scan:
+  # Earnings anticipation window (trading days)
+  earnings_anticipation_min_days: 5
+  earnings_anticipation_max_days: 20
+
+risk:
+  stop_loss_pct: 0.10
+  first_take_profit_pct: 0.10
+  second_take_profit_pct: 0.20
+  # If true, never hold the anticipation setup through earnings
+  avoid_holding_through_earnings: true
+
+edgar:
+  max_rps: 5
+  user_agent: "penny-dd-scanner/0.1 (contact: you@example.com)"
+
+dd_brain:
+  enabled: false
+  top_n: 10
