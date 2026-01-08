@@ -9,6 +9,7 @@ __pycache__/
 # Local data / state
 data/
 outputs/
+scanner/dd_brain/reports/
 
 # OS
 .DS_Store
